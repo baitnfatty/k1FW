@@ -7,11 +7,8 @@
 
 ---
 
-## 0.0 CORRECTION (2026-07-28) — this report analysed the wrong machine
-
-The original report framed this as a **two-way** "old board vs new board" split and asserted that
-`CR4CU220812S12_ota_X2000E_V1.1.0.27.img` **is** the X2600 board you own. **That is wrong.** There are
-**three** distinct platforms, and the SoC axis (X2000E vs X2600) is *orthogonal to* and more important
+## 0.0 Hardware Varients
+There are **three** distinct platforms, and the SoC axis (X2000E vs X2600) is *orthogonal to* and more important
 than the S11/S12 filename axis:
 
 | | **A — S11** | **B — S12** | **C — C13 (your printer)** |
@@ -32,38 +29,18 @@ than the S11/S12 filename axis:
 - `/etc/version` = `X2000E_V1.1.0.27.20251225`
 - `apps/etc/init.d/CS55klipper_service` hardcodes `MODEL="$model-x2000-cfs-c"` → `[mcu] serial: /dev/ttyS7`
 
-**Where the original error came from.** Two red herrings. (1) The OTA header at `0x80` reads
-`"Creality x2600 software"` — a product-line/marketing string, not an SoC identifier. (2) The image
-ships Klipper config profiles for **both** SoCs (`k1c-x2600-cfs-c` *and* `k1c-x2000-cfs-c`), and the
-report harvested `/dev/rpmsg_mcu` + `prtouch_v3` from the **x2600 profile directory — which is inert
-dead weight in that image**, because the init script only ever selects the `x2000` profile. The
-`x2600` details were real, but they describe a machine this image does not run on.
-
 **Ground truth for your printer** (`backups/firmware_full_20260728.tar`, `analysis/exploit_review/C13_README.md`):
 board `CR4SU200382C13`, firmware `K1C-2025_V1.0.0.22.20250711S`, klippy.log reports `MCU=x2600`, and
 the C13 `CS55klipper_service` hardcodes `MODEL="$product-x2600"`.
 
-**Consequences — read before acting on anything below:**
 
-1. **Sections 2.1, 3.x, 4, 5, 6 and 9.2 describe platform B, not your printer.** Treat every
-   "NEW board" claim in them as X2000E/S12 unless independently re-verified against C13.
-2. **§9.2's secure-boot conclusion is inverted for C13.** It argued secure boot probably stops at
-   u-boot because `soc_security.ko` was absent and `vectorp` had no `cmd_sc` string — but it looked in
-   the *X2000E* image. On C13, `/bin/seed.sh` loads `soc_security.ko` for `/dev/sc`, `/bin/cmd_sc` is
-   the client tool, SPL/u-boot/kernel are SCBT-encrypted, and the p7 rootfs squashfs is signed and
-   verified at mount. `analysis/c13/rootfs2.ext4` contains 8 `SCBT` and 6 `cmd_sc` references.
-   **Custom kernels are not "likely possible" on C13.**
-3. **The partition map in §3.2 is platform B's and does not match your printer.** On C13, `p3`/`p4`
-   are `rtos`/`rtos2` (the on-SoC coprocessor firmware — which is *why* the main MCU is `rpmsg_mcu`),
-   `p7` is the signed rootfs squashfs (`/usr/deplibs`), `p8` is a **separate 300 MB unencrypted ext4**
-   mounted at `/usr/apps` (**not** an A/B copy of p7), `p9` is `rootfs_data`, `p10` is userdata.
-4. **The one genuinely useful C13 conclusion:** Klipper lives at `/usr/apps/usr/share/klipper` on **p8**,
+ **The one genuinely useful C13 conclusion:** Klipper lives at `/usr/apps/usr/share/klipper` on **p8**,
    which is **unencrypted, unsigned, and writable**. That — not an OTA rootfs swap — is the correct
    injection target, and it is what `k1-2025-cartographer/install.sh` already uses.
 
 ---
 
-## 0. TL;DR (platform B — `CR4CU220812S12`, X2000E — **NOT your printer**)
+## 0. TL;DR (platform B — `CR4CU220812S12`, X2000E )
 
 | | **A — S11 (2.3.x)** | **B — S12 (1.1.0.27)** |
 |---|---|---|
@@ -219,7 +196,7 @@ The firmware's own MIPS userland was executed under `qemu-mipsel-static` in a ch
 
 ---
 
-## 5. S11 → S12 comparison (both X2000E — **neither is your printer**; see §0.0)
+## 5. S11 → S12 comparison 
 
 | Aspect | S11 board, 2.3.x | S12 board, 1.1.0.27 |
 |---|---|---|

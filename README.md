@@ -1,20 +1,10 @@
 # K1FW — 2025 Creality K1C / K1 Max (Ingenic X2600) firmware research
+This repo is setup for an agentic install of the stock creality firmware with minor changes that allow the use of cartagrapher3D on the 2025 platform. 
 
 Reverse-engineering notes, tooling, and a working Cartographer-probe enablement
 package for the **2025-revision** Creality K1C and K1 Max — the Ingenic
 **X2600** board (`CR4SU200382C13`, firmware `K1C-2025_V1.0.0.x`). These are
 *not* the older rootable K1 boards; the usual community tools do not apply.
-
-This is defensive / right-to-repair research on **hardware the author owns**:
-the goal is to let an owner run their own firmware and add a Cartographer probe
-on a printer they bought. It documents the stock update path and its integrity
-model, and ships tooling that operates on firmware you supply. It does **not**
-distribute Creality account credentials or attack any Creality online service.
-
-> **Reproduction inputs are not committed.** The stock Creality OTA images are
-> too large for Git and are Creality's property — obtain them yourself (see
-> *Firmware inputs* below; SHA256 provided). Personal device captures (a
-> specific unit's serial/MAC and `/usr/data`) are intentionally excluded.
 
 ---
 
@@ -37,8 +27,7 @@ k1-2025-cartographer/          # the installable Cartographer package (see its R
 
 ## Firmware inputs (obtain these yourself)
 
-The two stock OTA images the analysis is built against are gitignored (over
-GitHub's 100 MB limit, and Creality's property). Download the matching release
+The two stock OTA images the analysis is built against are gitignored. Download the matching release
 from Creality for your board, then verify:
 
 | file | version | SHA256 |
@@ -48,6 +37,7 @@ from Creality for your board, then verify:
 
 Place them at the repo root. The `S12` (1.1.0.27) image is the primary subject;
 the `S11` (2.3.5.34) image is encrypted and used only for comparison.
+
 
 ---
 
@@ -86,11 +76,4 @@ offline. Planning and on-device decisions are in
 
 ---
 
-## Notes
 
-- **No vendor recovery** exists on this board. Anything that writes the kernel
-  or bootloader is treated as the one genuinely dangerous class of change.
-- The extracted stock firmware under `analysis/rootfs` and `analysis/extract`
-  is Creality's proprietary firmware, included here as analysis substrate.
-- Personal device captures (partition images, serial/MAC, `/usr/data`) are
-  excluded via `.gitignore` and are not part of this repository.

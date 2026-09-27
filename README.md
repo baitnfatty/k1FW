@@ -1,3 +1,11 @@
+This Repository contains a deep firmware analysis and some tooling to allow for Firmware repacking of creality  stock  "2025"
+firmware used on the K1 series. 
+
+With the provided you should be able to get a stock creality printer setup with a cartographer3d by simply running the install script which gives you access to the fluidd webpage and full root persistence,. 
+
+
+
+
 # K1FW — 2025 Creality K1C / K1 Max (Ingenic X2600) firmware research
 This repo is setup for an agentic install of the stock creality firmware with minor changes that allow the use of cartagrapher3D on the 2025 platform. 
 

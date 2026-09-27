@@ -1,0 +1,80 @@
+{
+    "ai_engine":{
+        "SystemPath": "/etc/appetc/solusp/",
+        "UserPath": "/usr/data/creality/solusp/",
+        "modePath":"./model/",
+        "dataUploadPath":"./config/x2600-dataUpload.json"
+    },
+    "AILog":{
+        "Level": 2 ,
+        "FileName": "/usr/data/printer_data/logs/solusp.log" ,
+        "maxFileSize": 10 ,
+        "maxBackupFiles": 2 
+    },
+    "waste":{
+        "SHLRConfig":{
+            "Enable":false,
+            "scale": 0.2 ,
+            "thPercent": 0.5
+        },
+        "SSIMConfig":{
+            "Enable":false,
+            "scale": 0.2 ,
+            "ssimThreshold": 0.86,
+            "pre_img_path":"./"
+        }
+    },                 
+    "platform": {
+        "templateMatching": {
+            "templateImage_cavity":"./template/platform_cavity.jpg",
+            "templateImage_nozzle":"./template/platform_nozzle.jpg",
+            "threshold": 0.5,
+            "scaleFactor": 0.25                                  
+        }
+    },
+    "camDirt":{
+        "nozzle":{
+            "templateImagePath1":"./template/camDirt1.jpg",
+            "templateImagePath2":"./template/camDirt2.jpg",
+            "roi": {"x": 0.275,"y": 0.2,"width": 0.475,"height": 0.633},
+            "threshole":{
+                "sobel": 700,
+                "fftwe": 35,
+                "canny":50,
+                "pipei1": 0.6,
+                "pipei2": 0.86,
+                "matchScale": 0.5,
+                "pipeiScale": 0.25
+            }
+        },
+        "cavity":{
+            "clearImagePath":"./template/clear.bmp",
+            "dirtyImagePath":"./template/dirty.bmp",
+            "roi":{ "x": 0.339, "y": 0, "width": 0.3125, "height": 0.2778 },
+            "weights":[0.2, 0.6, 0.2],
+            "laplacian": 0.3,
+            "laplacian2":0.15,
+            "canny":0.25
+        }
+    },
+    "foreign":{
+        "roiVertices": [
+            [56,459],
+            [717,325],
+            [1268,441],
+            [1272,614],
+            [1204,716],
+            [124,718]
+        ]
+    },
+    "flowCalib":{
+        "isAIDetect":true,  
+        "DetectRect": {
+            "x": 560,
+            "y": 381,
+            "width": 500,
+            "height": 450,
+            "autoDetect":true
+        }
+    }
+}

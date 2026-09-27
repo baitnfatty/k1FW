@@ -1,0 +1,304 @@
+{
+    "CB5510": [
+        "Heater heater_bed temperature {msg} out of range"
+    ],
+    "CB2565": [
+        "Heater heater_bed not heating at expected rate {msg}"
+    ],
+    "CT5511": [
+        "Sensor chassis temperature {msg} out of range",
+        "TemperatureFan chassis temperature {msg} out of range"
+    ],
+    "CX2573": [
+        "Error during homing x: {msg}",
+        "No trigger on x after full movement",
+        "Endstop x still triggered after retract"
+    ],
+    "CY2577": [
+        "Error during homing y: {msg}",
+        "No trigger on y after full movement",
+        "Endstop y still triggered after retract"
+    ],
+    "CZ2581": [
+        "Error during homing z: {msg}",
+        "No trigger on z after full movement",
+        "No trigger on probe after full movement",
+        "Endstop z still triggered after retract"
+    ],
+    "CC5000": [
+        "Arc move out of range{msg}",
+        "Move out of range: {msg}",
+        "Extrude only move too long {msg} See the 'max_extrude_only_distance' config option for details",
+        "Move exceeds maximum extrusion {msg} See the 'max_extrude_cross_section' config option for details"
+    ],
+    "BM2512": [
+        "Sensor main_board temperature {msg} out of range",
+        "TemperatureFan main_board temperature {msg} out of range"
+    ],
+    "BM0111": [
+        "MCU 'nozzle_mcu' shutdown: Invalid command",
+        "mcu 'nozzle_mcu': Invalid CAN uuid",
+        "mcu 'nozzle_mcu': Unable to connect",
+        "mcu 'nozzle_mcu': Serial connection closed",
+        "Lost communication with MCU 'nozzle_mcu'",
+        "MCU 'nozzle_mcu' spontaneous restart",
+        "MCU 'nozzle_mcu' shutdown: Invalid oid type",
+        "MCU 'nozzle_mcu' shutdown: Missed scheduling of next digital out event",
+        "MCU 'nozzle_mcu' shutdown: Scheduled digital out event will exceed max_duration"
+    ],
+    "BM0112": [
+        "MCU 'leveling_mcu' shutdown: Invalid command",
+        "mcu 'leveling_mcu': Invalid CAN uuid",
+        "mcu 'leveling_mcu': Unable to connect",
+        "mcu 'leveling_mcu': Serial connection closed",
+        "Lost communication with MCU 'leveling_mcu'",
+        "MCU 'leveling_mcu' spontaneous restart",
+        "MCU 'leveling_mcu' shutdown: Invalid oid type",
+        "MCU 'leveling_mcu' shutdown: Missed scheduling of next digital out event",
+        "MCU 'leveling_mcu' shutdown: Scheduled digital out event will exceed max_duration"
+    ],
+    "TE5515": [
+        "Heater extruder temperature {msg} out of range"
+    ],
+    "TE2564": [
+        "Heater extruder not heating at expected rate {msg}"
+    ],
+    "TE2111": [
+        "Extrude below minimum temp {msg}"
+    ],
+    "TF0501": [
+        "FanTachometer 'hotend_fan' rpm {msg} is below min rpm"
+    ],
+    "TF0526": [
+        "FanTachometer 'model_fan' rpm {msg} is below min rpm"
+    ],
+    "TO5026": [
+        "Invalid lis2dw id {msg}",
+        "Failed to set LIS2DW register {msg}",
+        "Failed to set ADXL345 register {msg}",
+        "Invalid adxl345 id {msg}",
+        "Internal error processing accelerometer data {msg}",
+        "Error in remote calculation: {msg}"
+    ],
+    "CL5003": [
+        "PR_ERR_CODE_SWAP_PIN_DETECTI: The synchronization pin test failed, pres_swap_pin={msg}, step_swap_pin={msg}.",
+        "PR_ERR_CODE_PRES_NOT_BE_SENSED: The pressure data in channel={msg} cannot be properly sensed."
+    ],
+    "BM0110": [
+        "mcu 'mcu': Invalid CAN uuid",
+        "mcu 'mcu': Unable to connect",
+        "mcu 'mcu': Serial connection closed",
+        "Lost communication with MCU 'mcu'",
+        "MCU 'mcu' shutdown: Missed scheduling of next digital out event",
+        "MCU 'mcu' spontaneous restart",
+        "MCU 'mcu' shutdown: Invalid oid type",
+        "MCU 'mcu' shutdown: Scheduled digital out event will exceed max_duration",
+        "Internal error in MCU 'mcu' stepcompress"
+    ],
+    "BM5030": [
+        "MCU 'nozzle_mcu' shutdown: Move queue overflow"
+    ],
+    "BM5031": [
+        "Timeout on wait for 'tmcuart_response' response"
+    ],
+    "CF5020": [
+        "FanTachometer 'main_board' rpm {msg} is below min rpm"
+    ],
+    "CF5032": [
+        "FanTachometer 'side_fan' rpm {msg} is below min rpm"
+    ],
+    "CC5021": [
+        "Must home first{msg}",
+        "Must home 'xy' axis first{msg}"
+    ],
+    "CZ5022": [
+        "Must home 'z' axis first{msg}"
+    ],
+    "XD2571": [
+        "Unable to parse the file",
+        "G2/G3 requires IJ, IK or JK parameters",
+        "Unable to parse move {msg}"
+    ],
+    "XD5027": [
+        "Unable to open file",
+        "Unable to get file list"
+    ],
+    "NG000O": [
+        "Manual Stop",
+        "Stop trigger on x after manual stop",
+        "Stop trigger on y after manual stop",
+        "Stop trigger on z after manual stop",
+        "Stop trigger on probe after manual stop",
+        "Stop trigger on ze after manual stop",
+        "Endstop ze still triggered after retract"
+    ],
+    "CX2566": [
+        "TMC 'stepper_x' reports GSTAT:      00000001 reset=1(Reset)",
+        "TMC 'stepper_x' reports error: GSTAT:      00000001 reset=1(Reset)",
+        "Unable to read tmc uart 'stepper_x' register {reg}",
+        "Unable to write tmc uart 'stepper_x' register {reg}"
+    ],
+    "CY2567": [
+        "TMC 'stepper_y' reports GSTAT:      00000001 reset=1(Reset)",
+        "TMC 'stepper_y' reports error: GSTAT:      00000001 reset=1(Reset)",
+        "Unable to read tmc uart 'stepper_y' register {reg}",
+        "Unable to write tmc uart 'stepper_y' register {reg}"
+    ],
+    "CZ2568": [
+        "TMC 'stepper_z' reports GSTAT:      00000001 reset=1(Reset)",
+        "TMC 'stepper_z' reports error: GSTAT:      00000001 reset=1(Reset)",
+        "Unable to read tmc uart 'stepper_z' register {reg}",
+        "Unable to write tmc uart 'stepper_z' register {reg}"
+    ],
+    "CZ2588": [
+        "horizontal_move_z can't be less than probe's z_offset"
+    ],
+    "CZ2352": [
+        "bed_mesh: ERROR, fade_target lies outside of mesh z range min: {msg}, max: {msg}, fade_target: {msg}",
+        "bed_mesh:  Mesh extends outside of the fade range, please see the fade_start and fade_end options inexample-extras.cfg. fade distance: {msg} mesh min: {msg} mesh max: {msg}",
+        "bed_mesh: invalid position list size, generated count: {msg}, probed count: {msg}",
+        "bed_mesh: Invalid y-axis table length Probed table length: {msg} Probed Table: {msg}",
+        "bed_mesh: incorrect number of points sampled on X Probed Table: {msg}",
+        "bed_mesh: invalid x-axis table length Probed table length: {msg} Probed Table: {msg}",
+        "bed_mesh: Slice distance is negative or greater than entire move length"
+    ],
+    "TE5029": [
+        "Unable to read tmc uart 'extruder' register {reg}",
+        "Unable to write tmc uart 'extruder' register {reg}",
+        "TMC 'extruder' reports error: {msg}"
+    ],
+    "FS2834": [
+        "CFS-C系统出现异常错误 addr:{addr}"
+    ],
+    "FS2840": [
+        "指令发送失败，当前场景不支持该指令"
+    ],
+    "FS2831": [
+        "盒子通讯异常 addr:{addr}",
+        "盒子未连接 addr:{addr}",
+        "盒子掉线 addr:{addr}"
+    ],
+    "FS5007": [
+        "切刀通讯异常",
+        "切刀掉线"
+    ],
+    "FR0121": [
+        "CFS耗材使用中"
+    ],
+    "FR0122": [
+        "外置料架耗材使用中",
+        "current material unknown",
+        "printer sensor detected error",
+        "cut sensor detected error"
+    ],
+    "FR2850": [
+        "five_way has multiple material"
+    ],
+    "FR2851": [
+        "form tip failed, print detected material"
+    ],
+    "FR2865": [
+        "return to cut failed, print detected material"
+    ],
+    "FR5028": [
+        "form tip failed, cut not detected material",
+        "form tip failed, five_way not detected material",
+        "form tip failed, material not detected material"
+    ],
+    "FO5018": [
+        "return to cut failed, print not detected material"
+    ],
+    "FO5015": [
+        "cut move left failed",
+        "send material to cut failed"
+    ],
+    "FO5014": [
+        "cut move right failed"
+    ],
+    "FR2849": [
+        "return five-port failed"
+    ],
+    "FR2848": [
+        "five-port detected addr:{addr} num:{num}"
+    ],
+    "FR2839": [
+        "box no material addr:{addr} num:{num}",
+        "feeding to five-port failed, no material detected, addr:{addr} num:{num}"
+    ],
+    "FO5024": [
+        "cut home failed"
+    ],
+    "FR2835": [
+        "feeding to five-port failed"
+    ],
+    "FO2838": [
+        "feeding to five-port gear failed"
+    ],
+    "FO5009": [
+        "begin feeding material error",
+        "feeding into cut sensor failed"
+    ],
+    "FO5010": [
+        "feeding into pointer sensor failed"
+    ],
+    "FB2844": [
+        "The Teflon tube may fall off from the pneumatic fitting"
+    ],
+    "FB2864": [
+        "pointer sensor detected but buffer full failed"
+    ],
+    "FO2837": [
+        "pointer sensor detected but buffer empty failed"
+    ],
+    "FO5008": [
+        "pointer sensor detected but extrusion failed"
+    ],
+    "FS5023": [
+        "rfid:other is not supported addr:{addr} num:{num}"
+    ],
+    "FO0528": [
+        "empty print"
+    ],
+    "FC5016": [
+        "cut initialization failed"
+    ],
+    "FS2843": [
+        "RFID 标签数据不匹配 addr:{addr} num:{num}"
+    ],
+    "FS5011": [
+        "RFID 读取异常 addr:{addr} num:{num}"
+    ],
+    "FS5012": [
+        "RFID 写入异常 addr:{addr} num:{num}"
+    ],
+    "FS2861": [
+        "RFID 左侧通讯异常 addr:{addr}"
+    ],
+    "FS2862": [
+        "RFID 右侧通讯异常 addr:{addr}"
+    ],
+    "FH2853": [
+        "湿度传感器异常 addr:{addr}"
+    ],
+    "FS2858": [
+        "EEPROM异常 addr:{addr}"
+    ],
+    "FO2859": [
+        "里程计异常 addr:{addr}"
+    ],
+    "FB2846": [
+        "盒子电机速度异常 addr:{addr}"
+    ],
+    "FB2847": [
+        "盒子缠料异常 addr:{addr}"
+    ],
+    "FM2857": [
+        "盒子电机负载异常 addr:{addr}"
+    ],
+    "FC5013": [
+        "切刀使用频率已经达到寿命标准"
+    ],
+    "FO5035": [
+        "强制预上料执行失败"
+    ]
+}

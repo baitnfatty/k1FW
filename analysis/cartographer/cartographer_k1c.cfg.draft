@@ -1,0 +1,83 @@
+# ============================================================
+# Cartographer v4 — K1C 2025 (CR4SU200382C13 / X2600)
+# DRAFT — NOT YET APPLIED. Offsets marked TODO need the mount.
+# ============================================================
+#
+# Device confirmed on printer:
+#   /dev/ttyACM0   VID:PID 1d50:614e  (Klipper USB id)
+#   Cartographer stm32g431xx  SN 3E0032001750303655333520
+#
+# CONFLICT (verified on device): [prtouch_v3] currently provides the
+# "probe" object. cartographer.py's load_config() calls
+# add_object("probe", ...) -> the two CANNOT coexist.
+# [prtouch_v3] must be commented out for this to load.
+#
+# ------------------------------------------------------------
+# 1) Cartographer's own MCU (separate from the on-SoC main mcu)
+# ------------------------------------------------------------
+[mcu scanner]
+serial: /dev/ttyACM0
+# No /dev/serial/by-id on this image (mdev, not udev). Only one ACM
+# device exists (the CREALITY CAM is a video device), so ttyACM0 is stable.
+
+# ------------------------------------------------------------
+# 2) Cartographer probe
+# ------------------------------------------------------------
+[cartographer]
+mcu: scanner
+
+#  TODO — MEASURE AFTER MOUNTING. Offset of the coil centre from the
+#  nozzle, in mm. Sign convention: +x right, +y back.
+x_offset: 0.0      # TODO
+y_offset: 0.0      # TODO
+
+#  Sensor working distance. 2.0 is the Cartographer default and is a
+#  safe starting point; calibration refines it.
+trigger_distance: 2.0
+trigger_dive_threshold: 1.0
+trigger_hysteresis: 0.006
+z_settling_time: 5
+
+#  Calibration sweep window (mm above bed)
+cal_nozzle_z: 0.1
+cal_floor: 0.2
+cal_ceil: 5.0
+cal_speed: 1.0
+cal_move_speed: 10.0
+
+speed: 5.0
+lift_speed: 5.0
+backlash_comp: 0.5
+default_model_name: default
+
+# ------------------------------------------------------------
+# 3) Bed mesh — K1C is 220x220. Mesh area must be reachable by the
+#    COIL, not the nozzle, so it shrinks by the x/y offset.
+#    Stock K1C mesh was mesh_min 10,10 / mesh_max 210,210.
+#    Recompute once offsets are known.
+# ------------------------------------------------------------
+# [bed_mesh]
+# speed: 80
+# horizontal_move_z: 5
+# mesh_min: 10, 10          # TODO adjust for coil offset
+# mesh_max: 210, 210        # TODO adjust for coil offset
+# probe_count: 15, 15       # Cartographer scans fast; 15x15 is cheap
+# algorithm: bicubic
+# bicubic_tension: 0.2
+# zero_reference_position: 110, 110
+
+# ------------------------------------------------------------
+# 4) In printer.cfg you must ALSO:
+#      - comment out  [prtouch_v3]  (whole block, ~line 260)
+#      - keep         stepper_z: endstop_pin: probe:z_virtual_endstop
+#        (now served by cartographer instead of prtouch)
+#      - review any Creality macros that call prtouch-specific commands
+# ------------------------------------------------------------
+
+# ------------------------------------------------------------
+# 5) Calibration order (AFTER mounting, with bed heat-soaked)
+#      1. CARTOGRAPHER_CALIBRATE   (builds the model)
+#      2. save, restart
+#      3. BED_MESH_CALIBRATE
+#      4. verify first layer
+# ------------------------------------------------------------

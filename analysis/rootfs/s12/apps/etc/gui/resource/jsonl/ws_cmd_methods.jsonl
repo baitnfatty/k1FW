@@ -1,0 +1,72 @@
+// DO NOT MODIFY UNLESS YOU KNOW WHAT YOU ARE DOING
+{"cxname":"cx_home_xy","method":"printer.gcode.script","params":{"script":"G28 X Y"}}
+{"cxname":"cx_move_y_plus","method":"printer.gcode.script","params":{"script":"G91\n G1 y%d F7800\n G90"}}
+{"cxname":"cx_move_y_minus","method":"printer.gcode.script","params":{"script":"G91\n G1 y-%d F7800\n G90"}}
+{"cxname":"cx_move_x_plus","method":"printer.gcode.script","params":{"script":"G91\n G1 x%d F7800\n G90"}}
+{"cxname":"cx_move_x_minus","method":"printer.gcode.script","params":{"script":"G91\n G1 x-%d F7800\n G90"}}
+{"cxname":"cx_home_z","method":"printer.gcode.script","params":{"script":"G28 Z"}}
+{"cxname":"cx_home_all","method":"printer.gcode.script","params":{"script":"G28"}}
+{"cxname":"cx_move_z_plus","method":"printer.gcode.script","params":{"script":"G91\n G1 z%d F600\n G90"}}
+{"cxname":"cx_move_z_minus","method":"printer.gcode.script","params":{"script":"G91\n G1 z-%d F600\n G90"}}
+{"cxname":"cx_set_extruder_temper","method":"printer.gcode.script","params":{"script":"SET_HEATER_TEMPERATURE HEATER=extruder TARGET=%d"}}
+{"cxname":"cx_set_heater_bed_temper","method":"printer.gcode.script","params":{"script":"SET_HEATER_TEMPERATURE HEATER=heater_bed TARGET=%d"}}
+{"cxname":"cx_set_chamber_fan_temper","method":"printer.gcode.script","params":{"script":"SET_TEMPERATURE_FAN_TARGET TEMPERATURE_FAN=chamber_fan TARGET=%d"}}
+{"cxname":"cx_set_mainboard_fan_target","method":"printer.gcode.script","params":{"script":"SET_TEMPERATURE_FAN_TARGET TEMPERATURE_FAN=main_board TARGET=%d"}}
+{"cxname":"cx_extrude_material","method":"printer.gcode.script","params":{"script":"M83\n G1 E100 F300"}}
+{"cxname":"cx_retract_material","method":"printer.gcode.script","params":{"script":"M83\n G1 E-100 F300"}}
+{"cxname":"cx_exclude_object","method":"printer.gcode.script","params":{"script":"EXCLUDE_OBJECT NAME=%s"}}
+{"cxname":"cx_close_slient_mode","method":"printer.gcode.script","params":{"script":"Qmode_exit"}}
+{"cxname":"cx_open_slient_mode","method":"printer.gcode.script","params":{"script":"Qmode"}}
+{"cxname":"cx_set_print_speed","method":"printer.gcode.script","params":{"script":"M220 S%d SAVE1"}}
+{"cxname":"cx_motor_off","method":"printer.gcode.script","params":{"script":"M84"}}
+{"cxname":"cx_set_zoffset_not_homed","method":"printer.gcode.script","params":{"script":"SET_GCODE_OFFSET Z_ADJUST=%.3f MOVE=0"}}
+{"cxname":"cx_set_zoffset_homed","method":"printer.gcode.script","params":{"script": "SET_GCODE_OFFSET Z_ADJUST=%.3f MOVE=1"}}
+{"cxname":"cx_set_fan_speed","method":"printer.gcode.script","params":{"script": "CX_SET_FAN FAN=%s SPEED=%.2f"}}
+{"cxname":"cx_set_pin_fan_speed","method":"printer.gcode.script","params":{"script": "SET_PIN PIN=%s VALUE=%.2f"}}
+{"cxname":"cx_set_led_white","method":"printer.gcode.script","params":{"script": "SET_LED LED=lighting WHITE=%.3f"}}
+{"cxname":"cx_get_powerloss_continue_info","method":"printer.gcode.script","params":{"script": "SDCARD_PRINT_CHECK_UNFINISHED"}}
+{"cxname":"cx_cancel_powerloss_continue","method":"printer.gcode.script","params":{"script": "SDCARD_PRINT_CLEAN_UNFINISHED"}}
+{"cxname":"cx_confirm_powerloss_continue","method":"printer.gcode.script","params":{"script": "SDCARD_PRINT_FILE FILENAME=\"%s\" ISCONTINUEPRINT=1 CALIBRATEMODE=0"}}
+{"cxname":"cx_start_print_custom","method":"printer.gcode.script","params":{"script": "SDCARD_PRINT_FILE FILENAME=\"%s\" ISCONTINUEPRINT=0 CALIBRATEMODE=%d"}}
+{"cxname":"cx_move_axis_e","method":"printer.gcode.script","params":{"script": "M83\n G1 E%d F180\n M400"}}
+
+// File
+{"cxname":"cx_server.files.get_directory","method":"server.files.get_directory","params":{"root":"%s","path":"%s","extended":true}}
+{"cxname":"cx_server.files.delete_file","method":"server.files.delete_file","params":{"path":"%s"}}
+{"cxname":"cx_server.history.delete_job","method":"server.history.delete_job","params":{"uid":"%s"}}
+{"cxname":"cx_server.history.delete_job_all","method":"server.history.delete_job","params":{"all":true}}
+{"cxname":"cx_server.history.reset_totals","method":"server.history.reset_totals"}
+{"cxname":"cx_server.files.roots","method":"server.files.roots"}
+{"cxname":"cx_server.files.get_directory_ex","method":"server.files.get_directory_ex","params":{"root":"%s","path":"%s","limit":%d,"start":%d,"since":%lf,"before":%lf,"order":"%s","keyword":"%s"}}
+{"cxname":"cx_server.umount","method":"server.umount","params":{"mount_path":"%s"}}
+
+// Init
+{"cxname":"cx_server.info","method":"server.info"}
+{"cxname":"cx_server.connection.identify","method":"server.connection.identify","params":{"client_name":"localGUI","version":"1.27.0-61c5e9a","type":"web","url":"link.com"}}
+{"cxname":"cx_server.files.list","method":"server.files.list","params":{"root":"config"}}
+{"cxname":"cx_printer.info","method":"printer.info"}
+{"cxname":"cx_server.config","method":"server.config"}
+{"cxname":"cx_machine.proc_stats","method":"machine.proc_stats"}
+{"cxname":"cx_machine.system_info","method":"machine.system_info"}
+{"cxname":"cx_server.history.list","method":"server.history.list","params":{"limit":"%d","start":"%d"}}
+{"cxname":"cx_server.history.totals","method":"server.history.totals"}
+{"cxname":"cx_server.history.count","method":"server.history.count"}
+{"cxname":"cx_server.announcements.list","method":"server.announcements.list"}
+{"cxname":"cx_server.webcams.list","method":"server.webcams.list"}
+{"cxname":"cx_server.job_queue.status","method":"server.job_queue.status"}
+{"cxname":"cx_printer.objects.list","method":"printer.objects.list"}
+{"cxname":"cx_printer.objects.subscribe","method":"printer.objects.subscribe","params":{"objects":%s}}
+
+{"cxname":"cx_server.gcode_store","method":"server.gcode_store"}
+{"cxname":"cx_printer.gcode.help","method":"printer.gcode.help"}
+{"cxname":"cx_server.temperature_store","method":"server.temperature_store","params":{"include_monitors":true}}
+// Printer
+{"cxname":"cx_printer_gcode_script","method":"printer.gcode.script","params":{"script":"%s"}}
+{"cxname":"cx_printer.print.start","method":"printer.print.start","params":{"filename":"%s"}}
+{"cxname":"cx_server.files.metadata","method":"server.files.metadata","params":{"filename":"%s"}}
+{"cxname":"cx_printer.print.pause","method":"printer.print.pause"}
+{"cxname":"cx_printer.print.resume","method":"printer.print.resume"}
+{"cxname":"cx_printer.print.cancel","method":"printer.print.cancel"}
+{"cxname":"cx_printer.complete.confirm","method":"printer.gcode.script","params":{"script":"SDCARD_RESET_FILE"}}
+{"cxname":"cx_printer.firmware_restart","method":"printer.firmware_restart"}
+{"cxname":"cx_printer.printer_restart","method":"printer.restart"}

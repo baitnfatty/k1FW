@@ -1,0 +1,67 @@
+#!/bin/sh
+#
+# Start user
+#
+
+if [ "$(id -u)" -ne 0 ]; then
+      echo "$0: Operation permission not permitted"
+      exit 1
+fi
+
+########## ip port route test ##########
+# 1 start kernel ip forward
+#     `echo 1 > /proc/sys/net/ipv4/ip_forward`
+# 2 set iptables 80 ==> 8081
+#     `iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 8081`
+# 3 query route state
+#     `iptables -t nat -L -n -v`
+# 4 start http server
+#     `python3 -m http.server 8081`
+# 5 web test
+#     http://xxx.xxx.xxx.xxx:80
+########################################
+
+case "$1" in
+  start)
+        # init hostname
+        hostname_str=$(get_sn_mac.sh hostname | tr -d '\n')
+        echo $hostname_str > /proc/sys/kernel/hostname
+
+	# ip port route config
+        echo 1 > /proc/sys/net/ipv4/ip_forward
+        if ! iptables-save -t nat | grep -q -- "-A PREROUTING -p tcp -m tcp --dport 80 -j REDIRECT --to-ports 8081"; then
+            iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 8081
+        fi 
+        
+        # init creality
+        chown -R creality:creality /usr/data && chmod 777 /usr/data
+        [ -s /usr/data/wpa_supplicant.conf ] \
+            || cp -rf /etc/wpa_supplicant_creality.conf /usr/data/wpa_supplicant.conf
+        su -c "ln -s /usr/share/klipper /home/creality/klipper" creality
+        su -c "ln -s /usr/share/moonraker /home/creality/moonraker" creality
+        su -c "ln -s /usr/share/fluidd /home/creality/fluidd" creality
+        su -c "ln -s  /usr/data  /home/creality/data" creality
+        su -c "[ -d /home/creality/run ] || mkdir -p /home/creality/run" creality
+        su -c "[ -d /usr/data/creality ] || mkdir -p /usr/data/creality" creality
+
+        if [ "$(cat /usr/data/creality/hostname 2>/dev/null)" != "$hostname_str" ]; then
+            echo $hostname_str > /usr/data/creality/hostname
+        fi
+
+        chmod 777 -R /sys/class/backlight/
+        chmod 777 -R /sys/class/backlight/backlight_pwm0/*
+
+        # init printer
+        su -c "[ -d /usr/data/printer_data ] || mkdir -p /usr/data/printer_data" creality
+        su -c "[ -d /usr/data/printer_data/logs ] || mkdir -p /usr/data/printer_data/logs" creality
+        ;;
+  stop)
+        ;;
+  restart|reload)
+        ;;
+  *)
+        echo "Usage: $0 {start|stop|restart}"
+        exit 1
+esac
+
+exit $?

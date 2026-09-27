@@ -1,0 +1,25 @@
+#!/bin/sh
+# Fluidd web UI on :4408  — 2025 K1C/K1Max
+# Lives on /usr/apps (p8, persistent). /etc and /var are RAM initramfs and are
+# recreated every boot, so we remake the dirs nginx needs each time.
+NGINX=/usr/sbin/nginx
+CONF=/usr/data/fluidd/nginx.conf
+PIDF=/usr/data/fluidd/tmp/nginx.pid
+
+start() {
+    [ -f "$CONF" ] || { echo "fluidd: $CONF missing"; return 1; }
+    mkdir -p /var/log/nginx /usr/data/fluidd/tmp /usr/data/fluidd/logs
+    printf "Starting fluidd (nginx :4408): "
+    if $NGINX -c "$CONF" 2>/dev/null; then echo "OK"; else echo "FAIL"; fi
+}
+stop() {
+    printf "Stopping fluidd: "
+    [ -f "$PIDF" ] && kill "$(cat $PIDF)" 2>/dev/null && echo "OK" || echo "not running"
+}
+case "$1" in
+    start) start ;;
+    stop) stop ;;
+    restart|reload) stop; sleep 1; start ;;
+    *) echo "Usage: $0 {start|stop|restart}"; exit 1 ;;
+esac
+exit 0

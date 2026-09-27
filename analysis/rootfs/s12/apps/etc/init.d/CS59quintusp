@@ -1,0 +1,61 @@
+#!/bin/sh
+#
+# Starts quintusp service.
+#
+
+if [ "$(id -u)" -eq 0 ]; then
+      su -c "$0 $@" creality
+      exit 0
+fi
+
+USER_DATA=/usr/data
+PROG=/usr/apps/usr/bin/quintusp
+CONFIG=quintusp.json
+DEFAUL_CONF_DIR=/etc/appetc/quintusp
+CONFIG_DIR=/usr/data/creality/quintusp
+PRINTER_DATA_DIR=$USER_DATA/printer_data
+PRINTER_LOGS_DIR=$PRINTER_DATA_DIR/logs/
+PID_FILE=/home/creality/run/quintusp.pid
+
+update_config() {
+      default_ver=$(awk -F'"' '/"version":/{print $4;exit}' "$DEFAUL_CONF_DIR/$CONFIG")
+      current_ver=$(awk -F'"' '/"version":/{print $4;exit}' "$CONFIG_DIR/$CONFIG")
+      if [ "$default_ver" != "$current_ver" ]; then
+            cp -rf $DEFAUL_CONF_DIR/$CONFIG $CONFIG_DIR/$CONFIG
+      fi
+}
+start() {
+      [ -d $PRINTER_DATA_DIR ] || mkdir -p $PRINTER_DATA_DIR
+      [ -d $PRINTER_LOGS_DIR ] || mkdir -p $PRINTER_LOGS_DIR
+      [ -d $CONFIG_DIR ] || mkdir -p $CONFIG_DIR
+      [ -f $CONFIG_DIR/$CONFIG ] || cp $DEFAUL_CONF_DIR/$CONFIG $CONFIG_DIR/$CONFIG
+
+      update_config
+
+      HOME=/root start-stop-daemon -S -q -b -m -p $PID_FILE \
+            --exec $PROG -- -l $PRINTER_LOGS_DIR/quintusp.log -c $CONFIG_DIR/$CONFIG
+}
+stop() {
+        start-stop-daemon -K -q -p $PID_FILE
+}
+restart() {
+        stop
+        start
+}
+
+case "$1" in
+  start)
+        start
+        ;;
+  stop)
+        stop
+        ;;
+  restart|reload)
+        restart
+        ;;
+  *)
+        echo "Usage: $0 {start|stop|restart}"
+        exit 1
+esac
+
+exit $?

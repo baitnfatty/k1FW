@@ -1,0 +1,58 @@
+#!/bin/sh
+#
+# Start gui service.
+#
+
+if [ "$(id -u)" -eq 0 ]; then
+      su -c "$0 $@" creality
+      exit 0
+fi
+
+USER_DATA=/usr/data
+RESOURCE_DIR=/etc/appetc/gui/resource/
+DEFAULT_CONFIG_DIR=/etc/appetc/gui/config/
+CREALITY_GUI_DIR=$USER_DATA/creality/gui/
+CONFIG_DIR=$CREALITY_GUI_DIR/config/
+USERDATA_DIR=$CREALITY_GUI_DIR/userdata/
+PROG=/usr/apps/usr/bin/vectorp
+PRINTER_DATA_DIR=$USER_DATA/printer_data
+PRINTER_LOGS_DIR=$PRINTER_DATA_DIR/logs/
+PID_FILE=/home/creality/run/gui_service.pid
+
+start() {
+      [ -d $PRINTER_DATA_DIR ] || mkdir -p $PRINTER_DATA_DIR
+      [ -d $PRINTER_LOGS_DIR ] || mkdir -p $PRINTER_LOGS_DIR
+      [ -d $CREALITY_GUI_DIR ] || mkdir -p $CREALITY_GUI_DIR
+      [ -d $USERDATA_DIR ] || mkdir -p $USERDATA_DIR
+      [ -d $CONFIG_DIR ] || cp -rf $DEFAULT_CONFIG_DIR $CREALITY_GUI_DIR
+
+      /usr/apps/usr/bin/boot_display shutdown &
+
+      HOME=/root start-stop-daemon -S -q -b -m -p $PID_FILE \
+            --exec $PROG -- -l $PRINTER_LOGS_DIR -r $RESOURCE_DIR -c $CONFIG_DIR -u $USERDATA_DIR -a none
+}
+stop() {
+        start-stop-daemon -K -q -p $PID_FILE
+}
+restart() {
+        stop
+        start
+}
+
+case "$1" in
+  start)
+        sleep 16
+        start
+        ;;
+  stop)
+        stop
+        ;;
+  restart|reload)
+        restart
+        ;;
+  *)
+        echo "Usage: $0 {start|stop|restart}"
+        exit 1
+esac
+
+exit $?

@@ -1,0 +1,40 @@
+# Cartographer mount offsets for K1-series toolheads.
+#
+# SOURCE: fetched verbatim from pellcorp/creality  mounts/cartographer/*.overrides
+#         (2026-07-27). These are physical mount geometry, so they carry over to
+#         the 2025 X2600 boards unchanged — the toolhead did not change.
+#
+# DO NOT hand-edit these numbers. Wrong offsets put the nozzle in the wrong
+# place relative to the probe and can drive it into the bed.
+#
+# CAVEAT: values assume the mount's standard probe variant and mount path.
+# If you use the low-profile probe and/or an alternate mount path, verify by
+# measuring nozzle-tip to coil-centre before trusting them.
+#
+# Reachability rule: nozzle_Y = mesh_Y - y_offset must stay <= stepper_y
+# position_max. Verified on a 2025 K1C: SkeletorMK7 mesh_max Y=200 with
+# y_offset=-22 needs nozzle Y=222; live position_max is 225. Clears by 3mm.
+#
+# model: k1c (220x220) | k1max (300x300)
+#
+# SKELETOR — there are two styles, pick the right row:
+#   SkeletorMK7         = BOTTOM mount path (standard / low-profile probe).
+#                         Offset is in Y, probe sits in front of the nozzle.
+#   SkeletorRightAngle  = SIDE mount path (right-angle probe).
+#                         Offset is in X, probe sits beside the nozzle.
+#
+#mount	model	x_offset	y_offset	mesh_min	mesh_max
+SkeletorMK7	k1c	0	-22	10,5	210,200
+SkeletorMK7	k1max	0	-22	10,13	290,273
+SkeletorRightAngle	k1c	-24.0	0.0	10,10	200,203
+SkeletorRightAngle	k1max	-24.0	0.0	10,10	275,290
+Default	k1c	-16.0	0.0	10,10	210,210
+Default	k1max	-16.0	0.0	10,10	287,287
+Pellcorp	k1c	0.0	16.86	10,17	210,200
+Pellcorp	k1max	0.0	16.86	10,22	290,280
+BootyGantry	k1c	0.0	18.7	10,25	200,200
+BootyGantry	k1max	0.0	18.7	10,25	280,280
+D3vilStock	k1c	0.0	16.86	10,17	210,200
+D3vilStock	k1max	0.0	16.86	10,22	290,280
+PurcellV5	k1c	-18.665	0.0	10,10	207,200
+PurcellV5	k1max	-18.665	0.0	10,10	287,287

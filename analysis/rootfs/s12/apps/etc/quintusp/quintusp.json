@@ -1,0 +1,83 @@
+{
+    "version":"1.0.1.5",
+    "hardware":{
+        "_comment fps":"15, 30",
+        "_comment pixelformat":"0:H264, 1:JPEG, 2:MPEG, 3:MJPEG, 4:NV12, 5:NV21, 6:YUYV, 7:YVU420, 8:YUV420, 9:YUV422P",
+
+        "cam_chassis":[
+            {
+                "productname":"CREALITY CAM",
+                "productid":"103",
+                "vendorid":"1d6c",
+                "width":1920,
+                "height":1080,
+                "pixelformat":0
+            },
+            {
+                "productname":"CCX2F3298",
+                "productid":"2231",
+                "vendorid":"a108",
+                "width":1920,
+                "height":1080,
+                "pixelformat":0
+            },
+            {
+                "productname":"CCX2F3299",
+                "productid":"2231",
+                "vendorid":"a108",
+                "width":800,
+                "height":600,
+                "pixelformat":4
+            },
+            {
+                "productname":"Ingenic HD Web Camera",
+                "productid":"2240",
+                "vendorid":"a108",
+                "width":1280,
+                "height":720,
+                "pixelformat":0
+            },
+            {
+                "productname":"CREALITY CAM",
+                "productid":"6366",
+                "vendorid":"c45",
+                "width":1920,
+                "height":1080,
+                "pixelformat":0
+            },
+            {
+                "productname":"USB Camera",
+                "productid":"6366",
+                "vendorid":"c45",
+                "width":1920,
+                "height":1080,
+                "pixelformat":0
+            }
+        ],
+        "cam_nozzle":[
+            {
+                "productname":"Ingenic HD Web Camera",
+                "productid":"2233",
+                "vendorid":"a111",
+                "width":1280,
+                "height":720,
+                "pixelformat":0
+            }
+        ],
+        "lcd":{
+            "lcd_en":"!PC12"
+        },
+        "powerloss":{
+            "status":"okay",
+            "Offlist":["PD11", "PC05"]
+        },
+        "led":{
+            "chassis_led":"PA08"
+        }
+    },
+    "printer":{
+        "klipper":{
+            "connet_path":"/tmp/klippy_uds"
+        }
+    }
+}

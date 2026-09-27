@@ -1,0 +1,18 @@
+# --- Large binaries GitHub rejects (>100 MB) or that are regenerable inputs ---
+# Stock Creality OTA images (obtain from Creality; SHA256 in README)
+*.img
+# extracted/large firmware images
+analysis/extract/s12/p7_rootfs.squashfs
+analysis/c13/rootfs2.ext4
+
+# --- Personal device captures — NEVER publish (serial/MAC + WiFi in /usr/data) ---
+backups/
+analysis/live_k1c/backup/
+analysis/exploit_review/hostip.txt
+
+# --- noise ---
+__pycache__/
+*.pyc
+
+# --- local tool settings ---
+.claude/settings.local.json

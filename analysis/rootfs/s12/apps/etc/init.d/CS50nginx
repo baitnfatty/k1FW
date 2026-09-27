@@ -1,0 +1,36 @@
+#!/bin/sh
+#
+# Start/stop nginx
+#
+
+if [ "$(id -u)" -eq 0 ]; then
+      su -c "$0 $@" creality
+      exit 0
+fi
+
+NGINX=/usr/sbin/nginx
+PIDFILE=/home/creality/run/nginx.pid
+
+case "$1" in
+  start)
+	echo "Starting nginx..."
+	mkdir -p /var/log/nginx /var/tmp/nginx
+	start-stop-daemon -S -x "$NGINX" -p "$PIDFILE"
+	;;
+  stop)
+	echo "Stopping nginx..."
+	start-stop-daemon -K -q -p "$PIDFILE"
+	;;
+  reload|force-reload)
+	echo "Reloading nginx configuration..."
+	"$NGINX" -s reload
+	;;
+  restart)
+	"$0" stop
+	sleep 1 # Prevent race condition: ensure nginx stops before start.
+	"$0" start
+	;;
+  *)
+	echo "Usage: $0 {start|stop|restart|reload|force-reload}"
+	exit 1
+esac

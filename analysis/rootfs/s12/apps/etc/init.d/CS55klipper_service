@@ -1,0 +1,237 @@
+#!/bin/sh
+#
+# Start klipper service.
+#
+
+if [ "$(id -u)" -eq 0 ]; then
+      su -c "$0 $@" creality
+      exit 0
+fi
+
+CMD_GPIO=/usr/apps/usr/bin/cmd_gpio
+export PATH="/bin:/sbin:/usr/bin:/usr/sbin:/usr/apps/bin:/usr/apps/sbin:/usr/apps/usr/bin:/usr/apps/usr/sbin"
+export LD_LIBRARY_PATH="/lib:/lib32:/usr/lib:/usr/lib32:/usr/apps/lib:/usr/apps/lib32:/usr/apps/usr/lib:/usr/apps/usr/lib32"
+
+#product="`get_sn_mac.sh hostname | awk -F '-' '{print tolower($1)}'`"
+gcode="k1c"
+product=$(/usr/apps/usr/bin/x2000_get_sn_mac.sh model)
+structure_ver=$(/usr/apps/usr/bin/x2000_get_sn_mac.sh structure_version)
+if [ -n "$product" ]; then
+     case $product in
+        "K1C")
+            model="k1c"
+            ;;
+        "CR-K1")
+            model="k1"
+            ;;
+        "CR-K1 Max")
+            model="k1max"
+            gcode="k1max"
+            ;;
+        "K1 SE")
+            model="k1se"
+            ;;
+        "F001")
+            model="ender3V3"
+            ;;
+        "F002")
+            model="ender3V3plus"
+            ;;
+        *)
+	    model="k1c"
+            ;;
+    esac
+    MODEL="$model-x2000-cfs-c"
+else
+    MODEL="k1c-x2000-cfs-c"
+fi
+
+echo "MODEL: $MODEL"
+
+USER_DATA=/usr/data
+PROG=/usr/share/klippy-env/bin/python
+CHECK_FW=/usr/share/klipper/scripts/check_fw.py
+DEFAULT_CFG=/usr/share/klipper/config/$MODEL
+PRINTER_DATA_DIR=$USER_DATA/printer_data
+MATERIAL_DATA_DIR=$PRINTER_DATA_DIR/database
+PRINTER_CONFIG_DIR=$PRINTER_DATA_DIR/config
+PRINTER_LOGS_DIR=$PRINTER_DATA_DIR/logs
+SAMPLE_GCODE_DIR=/usr/share/klipper/gcodes/${gcode}
+GCODE_FILES_DIR=$PRINTER_DATA_DIR/gcodes
+PID_FILE=/home/creality/run/klippy.pid
+PY_SCRIPT=/usr/share/klipper/klippy/klippy.py
+MATERIAL_CONFIG_DIR=/usr/app/etc/gui/config
+if [ ! -f $PY_SCRIPT ]; then
+    PY_SCRIPT=/usr/share/klipper/klippy/klippy.pyc
+fi
+
+get_cfg_version()
+{
+    local cfg="$1"
+    local version=$(head "$cfg" | grep -w Version | awk '{print $3}')
+    local tmp=""
+
+    if [ "x$version" != "x" ]; then
+        # remove char '.'
+        tmp=${version//./}
+        # remove char 'v' or 'V'
+        tmp=${tmp//v/}
+        version=${tmp//V/}
+        echo "$version"
+    else
+        echo "000"
+    fi
+}
+
+# Max backup cfg file count: 5
+# file name like : printer.cfg.1, printer.cfg.2
+backup_usr_cfg()
+{
+    local usr_cfg=$1
+
+    if [ -f $usr_cfg ]; then
+        count=$(ls $usr_cfg* | wc -l)
+        i=$count
+        while [ $i -ge 1 ]; do
+            if [ $i -ge 6 ]; then
+                echo "do nothing"
+            elif [ $i -eq 1 ]; then
+                cp $usr_cfg $usr_cfg.1 && sync
+            else
+                cp $usr_cfg.$((i-1)) $usr_cfg.$i && sync
+            fi
+            let i-=1
+        done
+    fi
+}
+
+update_config()
+{
+    local old_cfg="$2"
+    local new_cfg="$1"
+    local tmp_cfg=$PRINTER_CONFIG_DIR/.printer.cfg
+
+    local old_version=$(get_cfg_version "$old_cfg")
+    local new_version=$(get_cfg_version "$new_cfg")
+    echo "old_version: $old_version"
+    echo "new_version: $new_version"
+
+    if [ $new_version -ne $old_version ]; then
+        echo "backup user config"
+        backup_usr_cfg "$old_cfg"
+        echo "update config"
+        cp "$new_cfg" "$tmp_cfg"
+        echo "" >> "$tmp_cfg"
+        cat "$old_cfg" | sed -n '/SAVE_CONFIG/,$p' >> "$tmp_cfg"
+        cp "$tmp_cfg" "$old_cfg" && sync
+        ls "${CONFIG_PATH}"/*.* | grep -v printer.cfg | xargs -I {} cp -af {} $PRINTER_CONFIG_DIR/
+        sync
+    fi
+}
+
+update_form_tip()
+{
+      default_ver=$(awk -F'"' '/"version":/{print $4;exit}' "$DEFAULT_CFG/../form_tip.json")
+      current_ver=$(awk -F'"' '/"version":/{print $4;exit}' "$PRINTER_CONFIG_DIR/form_tip.json")
+      if [ "$default_ver" != "$current_ver" ]; then
+            cp -rf $DEFAULT_CFG/../form_tip.json $PRINTER_CONFIG_DIR/form_tip.json
+      fi
+}
+
+copy_config()
+{
+    CONFIG_PATH=$DEFAULT_CFG
+
+    [ -d "${CONFIG_PATH}" ] || {
+        echo "config_dir is not exist!"
+        exit 0
+    }
+
+    if [ -s $PRINTER_CONFIG_DIR/printer.cfg ]; then
+        # keep printer.cfg
+        # ls "${CONFIG_PATH}"/*.* | grep -v printer.cfg | xargs -I {} cp -af {} $PRINTER_CONFIG_DIR/
+        # sync
+
+        # update printer.cfg and keep SAVE_CONFIG section
+        if [ "$MODEL" = "k1max-x2000-cfs-c" ] && [ "$structure_ver" = "0" ]; then
+            update_config "$CONFIG_PATH/printer0.cfg" $PRINTER_CONFIG_DIR/printer.cfg
+        else
+            update_config "$CONFIG_PATH/printer.cfg" $PRINTER_CONFIG_DIR/printer.cfg
+        fi
+    else
+        cp -af "${CONFIG_PATH}"/* $PRINTER_CONFIG_DIR/
+        if [ "$MODEL" = "k1max-x2000-cfs-c" ]; then
+            if [ "$structure_ver" = "0" ]; then
+                mv $PRINTER_CONFIG_DIR/printer0.cfg $PRINTER_CONFIG_DIR/printer.cfg
+            else
+                rm -rf $PRINTER_CONFIG_DIR/printer0.cfg
+            fi
+        fi
+        sync
+    fi
+
+    update_form_tip
+}
+
+start() {
+    [ -f /tmp/klippy_mute ] && return
+    while [ -f /tmp/klippy_lock ]; do
+        usleep 200000
+    done
+    touch /tmp/klippy_lock
+
+    [ -d $PRINTER_DATA_DIR ] || mkdir -p $PRINTER_DATA_DIR
+    [ -d $PRINTER_CONFIG_DIR ] || mkdir -p $PRINTER_CONFIG_DIR
+    [ -d $PRINTER_LOGS_DIR ] || mkdir -p $PRINTER_LOGS_DIR
+    [ -d $GCODE_FILES_DIR ] || cp -rf $SAMPLE_GCODE_DIR $GCODE_FILES_DIR
+    [ -d $GCODE_FILES_DIR ] || mkdir -p $GCODE_FILES_DIR
+    [ -d $MATERIAL_DATA_DIR ] || mkdir -p $MATERIAL_DATA_DIR
+    [ -L $MATERIAL_DATA_DIR/material_database.json ] || ln -s $MATERIAL_CONFIG_DIR/material_database.json $MATERIAL_DATA_DIR/material_database.json
+
+    copy_config
+
+    HOME=/root start-stop-daemon -S -q -b -m -p $PID_FILE \
+        --exec $PROG -- $PY_SCRIPT \
+        $PRINTER_CONFIG_DIR/printer.cfg \
+        -l $PRINTER_LOGS_DIR/klippy.log \
+	--check-fw \
+        -a /tmp/klippy_uds
+
+    rm /tmp/klippy_lock
+}
+stop() {
+    while [ -f /tmp/klippy_lock ]; do
+        usleep 200000
+    done
+    start-stop-daemon -K -q -p $PID_FILE
+}
+restart() {
+    stop
+    start
+}
+
+case "$1" in
+  start)
+        start
+        ;;
+  stop)
+        stop
+        ;;
+  restart|reload)
+        restart
+        ;;
+  mute)
+        touch /tmp/klippy_mute
+        stop
+        ;;
+  unmute)
+        rm /tmp/klippy_mute
+        start
+        ;;
+  *)
+        echo "Usage: $0 {start|stop|restart|mute|unmute}"
+        exit 1
+esac
+
+exit $?
+

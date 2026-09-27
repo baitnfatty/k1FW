@@ -1,0 +1,16 @@
+# https://www.printables.com/model/1621139-ender-3-v3-se-cartographer-and-beacon-mounts
+
+-- cartographer.cfg
+[cartographer]
+x_offset: -18.0
+y_offset: 0.0
+
+[bed_mesh]
+mesh_min: 15,15
+mesh_max: 205,205
+
+[screws_tilt_adjust]
+screw1: 50,25
+screw2: 220,25
+screw3: 220,200
+screw4: 50,200

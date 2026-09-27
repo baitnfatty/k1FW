@@ -1,0 +1,32 @@
+#! /bin/sh
+
+if [ "$(id -u)" -eq 0 ]; then
+      su -c "$0 $@" creality
+      exit 0
+fi
+
+APP_NAME=/usr/apps/usr/bin/mdns
+APP_ARGS=" --service  _Creality-`creality_sn read creality_sn`._udp.local --port 5353  --hostname `hostname`"
+PIDFILE=/home/creality/run/mdns.pid
+
+case "$1" in
+  start)
+     echo "Starting mdns..."
+	 [ -f $PIDFILE ] && rm $PIDFILE
+     start-stop-daemon -S -b -m -p $PIDFILE --exec $APP_NAME -- $APP_ARGS
+     [ $? = 0 ] && echo "OK" || echo "FAIL"
+      ;;
+  stop)
+      echo "Stopping mdns..."
+      start-stop-daemon -K -p $PIDFILE
+      [ $? = 0 ] && echo "OK" || echo "FAIL"
+      ;;
+  restart)
+     "$0" stop
+     sleep 1
+     "$0" start
+     ;;
+  *)
+     echo "Usage: $0 {start|stop|restart|reload|force-reload}"
+     exit 1
+esac

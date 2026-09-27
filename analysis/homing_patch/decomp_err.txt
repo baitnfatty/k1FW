@@ -1,0 +1,3 @@
+
+# file homing.pyc
+# Deparsing stopped due to parse error
